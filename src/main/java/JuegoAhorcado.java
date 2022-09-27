@@ -33,14 +33,6 @@ public class JuegoAhorcado {
         }
         return ingresoUsuario;
     }
-    /*
-    public static void validarQueRespuestaNoTengaNumeros(String ingresoUsuario){
-        if(!ingresoUsuario.substring(0).matches("[a-z]*")){
-            System.out.println("Error, no se permiten números");
-            validarIngresoUsuario();
-        }
-    }
-    */
     public static String[] asignarPalabras(){
         String [] palabras = new String[10];
         palabras[0] = "dinamarca";
