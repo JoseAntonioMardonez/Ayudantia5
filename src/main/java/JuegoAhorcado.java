@@ -18,33 +18,29 @@ public class JuegoAhorcado {
         String ingresoUsuario = leerIngresoUsuario.nextLine();
         return ingresoUsuario;
     }
-    public static String validarIngresoUsuario(int largo){
+    public static String validarIngresoUsuario(){
         String ingresoUsuario="";
         try{
-            System.out.println("Ingrese su respuesta:");
+            System.out.println("Ingrese una letra:");
             ingresoUsuario=leerIngresoUsuario();
-            validarLargoDeLaRespuesta(ingresoUsuario, largo);
-            validarQueRespuestaNoTengaNumeros(ingresoUsuario, largo);
+            if(!ingresoUsuario.substring(0).matches("[a-z]*")){
+                System.out.println("Error, no se permiten números");
+                validarIngresoUsuario();
+            }
         }catch(Exception e){
-            System.out.println("Error, Ingrese nuevamente:");
-            validarIngresoUsuario(largo);
+            System.out.println("Error, intente nuevamente:");
+            validarIngresoUsuario();
         }
-
         return ingresoUsuario;
     }
-    public static void validarLargoDeLaRespuesta(String ingresoUsuario, int largo){
-        int largoRespuesta = ingresoUsuario.length();
-        if (largoRespuesta!=largo){
-            System.out.println("Error, Ingrese una palabra de: "+largo+" letras");
-            validarIngresoUsuario(largo);
+    /*
+    public static void validarQueRespuestaNoTengaNumeros(String ingresoUsuario){
+        if(!ingresoUsuario.substring(0).matches("[a-z]*")){
+            System.out.println("Error, no se permiten números");
+            validarIngresoUsuario();
         }
     }
-    public static void validarQueRespuestaNoTengaNumeros(String ingresoUsuario, int largo){
-        if(!ingresoUsuario.substring(0, largo).matches("[a-z]*")){
-            System.out.println("Error, Ingrese solo Letras");
-            validarIngresoUsuario(largo);
-        }
-    }
+    */
     public static String[] asignarPalabras(){
         String [] palabras = new String[10];
         palabras[0] = "dinamarca";
@@ -69,30 +65,60 @@ public class JuegoAhorcado {
         System.out.println("El largo de la palabra es: "+largoPalabra);
         return largoPalabra;
     }
+    public static char respuestaUsuario(int largo){
+        String respuestaUsuario = validarIngresoUsuario();
+        String respuestaSinMayusculas = respuestaUsuario.toLowerCase();
+        char letraRespuesta = respuestaSinMayusculas.charAt(0);
+        return letraRespuesta;
+    }
+    public static char[] crearArregloRespuesta(int largo){
+        char[] respuestas = new char[largo];
+        for(int i = 0; i<largo; i++){
+            respuestas [i] = '_';
+        }
+        return respuestas;
+    }
     public static void intentosUsuario(String palabraSeleccionada, int largo){
+        char[] letrasRespuestas = crearArregloRespuesta(largo);
         char[] letrasPalabra = palabraSeleccionada.toCharArray();
         int intento=1;
         do{
-            String respuesta = validarIngresoUsuario(largo);
-            char[] letrasRespuesta = respuesta.toCharArray();
-            if(Arrays.equals(letrasPalabra,letrasRespuesta)){
-                System.out.println("La respuesta es correcta");
-                break;
-            }else{
-                for(int i = 0; i<largo; i++){
-                    validarAciertos(i,letrasRespuesta,letrasPalabra);
+            char letraRespuesta = respuestaUsuario(largo);
+            for(int i = 0; i<largo; i++){
+                boolean aciertos = validarAciertos(i,letraRespuesta,letrasPalabra);
+                if(aciertos==true){
+                    letrasRespuestas[i] = letraRespuesta;
                 }
-                System.out.println("Respuesta incorrecta | Intentos restantes: "+(10-intento));
-                intento++;
+            }
+            mostrarRespuesta(letrasRespuestas,largo);
+            System.out.println(" ");
+            System.out.println("Le quedan: "+(10-intento)+" intentos");
+            intento++;
+            boolean respuestaCorrecta = verificarRespuestaCompleta(letrasRespuestas,letrasPalabra);
+            if(respuestaCorrecta==true){
+                break;
             }
         }while(intento<=10);
-        System.out.println("Se acabaron los intentos");
+        System.out.println("Juego Finalizado");
     }
-    public static void validarAciertos(int i, char[] letrasRespuesta, char[] letrasPalabra){
-        if(letrasRespuesta[i]==letrasPalabra[i]){
-            System.out.println("Letra "+letrasRespuesta[i]+" correcta");
+    public static void mostrarRespuesta(char[] letrasRespuestas, int largo){
+        for(int i = 0; i<largo; i++){
+            System.out.print(letrasRespuestas[i]);
+        }
+    }
+    public static boolean validarAciertos(int i, char letraRespuesta, char[] letrasPalabra){
+        if(letraRespuesta==letrasPalabra[i]){
+            return true;
         }else{
-            System.out.println("Letra "+letrasRespuesta[i]+" incorrecta");
+            return false;
+        }
+    }
+    public static boolean verificarRespuestaCompleta(char[] letrasRespuestas, char[] letrasPalabra){
+        if(Arrays.equals(letrasRespuestas,letrasPalabra)){
+            System.out.println("Respuesta Correcta");
+            return true;
+        }else{
+            return false;
         }
     }
 }
