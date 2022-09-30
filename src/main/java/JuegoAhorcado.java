@@ -18,18 +18,41 @@ public class JuegoAhorcado {
         String ingresoUsuario = leerIngresoUsuario.nextLine();
         return ingresoUsuario;
     }
+    public static boolean esUnNumero(String ingresoUsuario){
+        try{
+            int number = Integer.parseInt(ingresoUsuario);
+            return true;
+        }catch (NumberFormatException ex){
+            return false;
+        }
+    }
+    public static boolean esUnaSolaLetra(String ingresoUsuario){
+        int largo = ingresoUsuario.length();
+        if(largo==1){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public static String validarIngresoUsuario(){
         String ingresoUsuario="";
         try{
             System.out.println("Ingrese una letra:");
             ingresoUsuario=leerIngresoUsuario();
-            if(!ingresoUsuario.substring(0).matches("[a-z]*")){
-                System.out.println("Error, no se permiten números");
-                validarIngresoUsuario();
-            }
         }catch(Exception e){
             System.out.println("Error, intente nuevamente:");
             validarIngresoUsuario();
+        }finally {
+            boolean esNumero = esUnNumero(ingresoUsuario);
+            if (esNumero==true){
+                System.out.println("Error, no se permiten números");
+                validarIngresoUsuario();
+            }
+            boolean soloUnaLetra = esUnaSolaLetra(ingresoUsuario);
+            if (soloUnaLetra==false){
+                System.out.println("Error, debe ingresar solo una letra");
+                validarIngresoUsuario();
+            }
         }
         return ingresoUsuario;
     }
